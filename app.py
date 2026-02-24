@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "Hello, World! Flask app is running."
+    return "Hello, World! Flask app is running. this is the dev branch of git hub"
 
 @app.route('/api/greet', methods=['GET'])
 def greet():
@@ -12,4 +12,4 @@ def greet():
     return jsonify({"message": f"Hello, {name}!"})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=80, debug=True)
