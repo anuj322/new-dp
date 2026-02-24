@@ -1,0 +1,10 @@
+version: '3.9'
+
+services:
+  flask-app:
+    build: .
+    container_name: flask-app-container
+    ports:
+      - "80:80"  
+    environment:
+      - FLASK_ENV=development  

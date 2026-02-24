@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "Hello, World! Flask app is running."
+    return "Hello, World! Flask app is running main branch"
 
 @app.route('/api/greet', methods=['GET'])
 def greet():
