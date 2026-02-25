@@ -6,7 +6,6 @@ pipeline {
         PROJECT_DIR = "/home/ubuntu/flask-app"
         GIT_REPO = "https://github.com/anuj322/new-dp.git"
         GIT_BRANCH = "main"
-        AWS_REGION = "ap-south-1"
     }
 
     stages {
@@ -14,21 +13,10 @@ pipeline {
         stage('Deploy to EC2') {
             steps {
 
-                withCredentials([
-                    sshUserPrivateKey(credentialsId: 'ec2-ssh-key',
-                                      keyFileVariable: 'SSH_KEY',
-                                      usernameVariable: 'SSH_USER'),
-                    aws(credentialsId: 'aws admin',
-                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')
-                ]) {
+                sshagent(['ec2-ssh-key']) {
 
                     sh """
-                    ssh -i $SSH_KEY -o StrictHostKeyChecking=no $SSH_USER@$EC2_HOST '
-                        export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
-                        export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
-                        export AWS_DEFAULT_REGION=$AWS_REGION
-
+                    ssh -o StrictHostKeyChecking=no ubuntu@$EC2_HOST '
                         mkdir -p $PROJECT_DIR
                         cd $PROJECT_DIR
 
