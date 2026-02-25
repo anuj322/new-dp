@@ -11,7 +11,7 @@ pipeline {
         stage('building image && testing') {
             steps {
                 echo 'building image...'
-                sh 'docker-compose up --build -d'
+                sh 'docker compose up --build -d'
             }
         }
     }
