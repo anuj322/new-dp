@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+
+    environment {
+        PROJECT_DIR = "/home/ubuntu/flask-app" // where you want your project on EC2
+    }
+
+    stages {
+
+        stage('Deploy on EC2 with Docker Compose') {
+            steps {
+                echo 'Deploying to AWS EC2 using docker-compose...'
+
+                sshCommand remote: [
+                    host: 'ec2-65-0-81-201.ap-south-1.compute.amazonaws.com',
+                    user: 'ubuntu',
+                    identityFile: '/home/anuj/Downloads/my-laptop.pem',
+                    allowAnyHosts: true
+                ],
+                command: """
+                    mkdir -p $PROJECT_DIR
+                    rsync -avz -e "ssh -i /home/anuj/Downloads/my-laptop.pem -o StrictHostKeyChecking=no" ./ $USER@$HOST:$PROJECT_DIR/
+                    cd $PROJECT_DIR
+                    docker-compose down || true
+                    docker-compose up --build -d
+                """
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Cleaning workspace...'
+            cleanWs()
+        }
+    }
+}
